@@ -108,7 +108,7 @@ async function setup() {
 console.log("Device 1 created.")
 // DEVICE 2
 
-    const patchExportURL2 = "export/patch3.export.json";
+    const patchExportURL2 = "export/patch4.export.json";
     patcher = null
     // Fetch the exported patcher
 //    let response, patcher;
