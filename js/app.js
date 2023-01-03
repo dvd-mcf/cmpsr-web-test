@@ -279,6 +279,7 @@ function makeSliders(device, ID) {
         // Make each slider control its parameter
         slider.addEventListener("pointerdown", () => {
             isDraggingSlider = true;
+			console.log("Dragging " + slider)
         });
         slider.addEventListener("pointerup", () => {
             isDraggingSlider = false;
