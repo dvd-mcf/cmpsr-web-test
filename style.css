@@ -25,7 +25,7 @@ h2, em {
 
 #rnbo-root {
     margin: auto;
-	width: 50%;
+	width: 60%;
 	float: right;
 	background-color: gray;
 	padding: 50px;
@@ -36,7 +36,7 @@ h2, em {
 
 #plate {
     margin: auto;
-	width: 50%;
+	width: 40%;
 	flex-direction: column;
 	float: left;
 	background-color: white;
