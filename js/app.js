@@ -105,7 +105,7 @@ async function setup() {
 
     // (Optional) Connect MIDI inputs
 
-
+console.log("Device 1 created.")
 // DEVICE 2
 
     const patchExportURL2 = "export/patch3.export.json";
