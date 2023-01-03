@@ -1,7 +1,7 @@
 <html>
   <head>
-    <script src="script.js"></script>
 	<script src="js/app.js"></script>
+	
 	
 	<script type="text/javascript" src="https://cdn.cycling74.com/rnbo/latest/rnbo.min.js"></script>
 	
@@ -33,50 +33,51 @@
 
 
 	
-    <div id="rnbo-root">
-		<div id = "inputs">
-		<ul>
-
-				 Player 1 input
-		    <select id="input1-select" ></select>
-			
-				Player 2 input
-		    <select id="input2-select" "></select>
+   <div id="rnbo-root">
 		
-				<button onclick="changeInputs()">Change inputs</button>
-				<br>
-		</ul>
-	</div>
+	<div id = "players">
     <!-- Player 1  -->
-
-		
-		<div>
-			<h1 id="patcher-title1">No patcher loaded for Player 1</h1>
-		</div>
+	
+		<div id = "player">
+			<h1> Player 1 </h1>
+					Input:
+			    <select oncchange="changeInputs()" id="input1-select" ></select>
+			<div>
+				Patch loaded:
+				
+			<h3 id="patcher-title1">No patcher loaded for Player 1</h3>
+			</div>
 		
 	
 		
-		<div id="rnbo-presets">
-			<h2>Player 1 Presets</h2>
-			<em id="no-presets-label">No presets defined</em>
-			<select id="preset-select"></select>
+		<div id="rnbo-presets1">
+			<select id="preset-select1"></select>
 		</div>
+	</div>
 		
 		    <!-- Player 2  -->
-		<ul>
+			
+		<div id = "player">
+
+			<h1> Player 2 </h1>
+			Input:
+		    <select onchange="changeInputs()" id="input2-select" "></select>
+			
 			<div>
-				<h1 id="patcher-title2">No patcher loaded</h1>
+				Patch loaded:
+				<h3 id="patcher-title2">No patcher loaded for Player 2</h3>
 			</div>
 			 
-		</ul>
+
 
 		
-		<div id="rnbo-presets">
-			<h2>Player 2 Presets</h2>
-			<em id="no-presets-label">No presets defined</em>
-			<select id="preset-select"></select>
+		<div id="rnbo-presets2">
+			<select id="preset-select2"></select>
 		</div>
 		
+		</div>
+		
+	</div>
 		
 
 		

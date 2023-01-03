@@ -5,7 +5,7 @@ html, body {
 }
 
 img {
-  width: 50%;
+  width: 20%;
   align
 }
 
@@ -77,6 +77,13 @@ h2, em {
 	align-items: center;
 	background-color: black;
 	color: white;
+}
+#players {
+	width: 100%;
+	display: flex;
+	padding: 20px;
+	align-items: center;
+
 }
 
 #rnbo-clickable-keyboard {

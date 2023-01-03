@@ -6,9 +6,10 @@ var device1
 var device2;
 
 
+WebMidi.enable()
+
 async function setup() {
 	
- WebMidi.enable()
 	
 	
     // Create AudioContext
@@ -101,7 +102,7 @@ async function setup() {
 //    attachOutports(device);
 
     // (Optional) Load presets, if any
-//    loadPresets(device1, patcher);
+    loadPresets(device1, patcher, 1);
 
     // (Optional) Connect MIDI inputs
 
@@ -172,24 +173,19 @@ console.log("Device 1 created.")
     // (Optional) Extract the name and rnbo version of the patcher from the description
     document.getElementById("patcher-title2").innerText = (patcher.desc.meta.filename || "Unnamed Patcher") + " (v" + patcher.desc.meta.rnboversion + ")";
 
-    // (Optional) Automatically create sliders for the device parameters
 
+//load preset 2
+    loadPresets(device2, patcher, 2);
+
+//make sliders
 
     makeSliders(device1, "rnbo1-parameter-sliders");
     makeSliders(device2, "rnbo2-parameter-sliders");
 
-    // (Optional) Create a form to send messages to RNBO inputs
-//    makeInportForm(device);
 
-    // (Optional) Attach listeners to outports so you can log messages from the RNBO patcher
-//    attachOutports(device);
-
-    // (Optional) Load presets, if any
-  //  loadPresets(device2, patcher);
-
-    // (Optional) Connect MIDI inputs
-    makeMIDIKeyboard(device1, 0);
-    makeMIDIKeyboard(device2, 1);
+//makeMIDIListener
+    makeMIDIListener(device1, 0);
+    makeMIDIListener(device2, 1);
 
 
 
@@ -279,7 +275,7 @@ function makeSliders(device, ID) {
         // Make each slider control its parameter
         slider.addEventListener("pointerdown", () => {
             isDraggingSlider = true;
-			console.log("Dragging " + slider)
+			console.log("Dragging " )
         });
         slider.addEventListener("pointerup", () => {
             isDraggingSlider = false;
@@ -321,71 +317,17 @@ function makeSliders(device, ID) {
     });
 }
 
-function makeInportForm(device) {
-    const idiv = document.getElementById("rnbo-inports");
-    const inportSelect = document.getElementById("inport-select");
-    const inportText = document.getElementById("inport-text");
-    const inportForm = document.getElementById("inport-form");
-    let inportTag = null;
-    
-    // Device messages correspond to inlets/outlets or inports/outports
-    // You can filter for one or the other using the "type" of the message
-    const messages = device.messages;
-    const inports = messages.filter(message => message.type === RNBO.MessagePortType.Inport);
 
-    if (inports.length === 0) {
-        idiv.removeChild(document.getElementById("inport-form"));
-        return;
-    } else {
-        idiv.removeChild(document.getElementById("no-inports-label"));
-        inports.forEach(inport => {
-            const option = document.createElement("option");
-            option.innerText = inport.tag;
-            inportSelect.appendChild(option);
-        });
-        inportSelect.onchange = () => inportTag = inportSelect.value;
-        inportTag = inportSelect.value;
-
-        inportForm.onsubmit = (ev) => {
-            // Do this or else the page will reload
-            ev.preventDefault();
-
-            // Turn the text into a list of numbers (RNBO messages must be numbers, not text)
-            const values = inportText.value.split(/\s+/).map(s => parseFloat(s));
-            
-            // Send the message event to the RNBO device
-            let messageEvent = new RNBO.MessageEvent(RNBO.TimeNow, inportTag, values);
-            device.scheduleEvent(messageEvent);
-        }
-    }
-}
-
-function attachOutports(device) {
-    const outports = device.messages.filter(message => message.type === RNBO.MessagePortType.Outport);
-    if (outports.length < 1) {
-        document.getElementById("rnbo-console").removeChild(document.getElementById("rnbo-console-div"));
-        return;
-    }
-
-    document.getElementById("rnbo-console").removeChild(document.getElementById("no-outports-label"));
-    device.messageEvent.subscribe((ev) => {
-
-        // Message events have a tag as well as a payload
-        console.log(`${ev.tag}: ${ev.payload}`);
-
-        document.getElementById("rnbo-console-readout").innerText = `${ev.tag}: ${ev.payload}`;
-    });
-}
-
-function loadPresets(device, patcher) {
+function loadPresets(device, patcher, ID) {
+	
+	console.log("Loading presets for " + device + " + " + patcher + " + " + ID + "...")
     let presets = patcher.presets || [];
     if (presets.length < 1) {
-        document.getElementById("rnbo-presets").removeChild(document.getElementById("preset-select"));
+        document.getElementById("rnbo-presets" + ID).removeChild(document.getElementById("preset-select" + ID));
         return;
     }
 
-    document.getElementById("rnbo-presets").removeChild(document.getElementById("no-presets-label"));
-    let presetSelect = document.getElementById("preset-select");
+    let presetSelect = document.getElementById("preset-select" + ID);
     presets.forEach((preset, index) => {
         const option = document.createElement("option");
         option.innerText = preset.name;
@@ -393,6 +335,8 @@ function loadPresets(device, patcher) {
         presetSelect.appendChild(option);
     });
     presetSelect.onchange = () => device.setPreset(presets[presetSelect.value].preset);
+	console.log("Loaded presets for " + device + " + " + patcher + " + " + ID)
+	
 }
 
 function changeInputs(){
@@ -413,14 +357,14 @@ function changeInputs(){
 	}
 	
 	
-    makeMIDIKeyboard(device1, value1);
-    makeMIDIKeyboard(device2, value2);
+    makeMIDIListener(device1, value1);
+    makeMIDIListener(device2, value2);
 	
 }
 
 
 
-function makeMIDIKeyboard(device, port) {
+function makeMIDIListener(device, port) {
 	console.log("Making notes: " + device + ", " + port)
     let mdiv = document.getElementById("rnbo-clickable-keyboard");
     if (device.numMIDIInputPorts === 0) return;
@@ -531,9 +475,46 @@ function makeMIDIKeyboard(device, port) {
 }
 
 
+function chooseMIDIInput() {
+  navigator.requestMIDIAccess().then(function(midiAccess) {
+    console.log("Input requested")
+    var inputs = midiAccess.inputs;
+        console.log(inputs)
 
+    var inputSelect1 = document.getElementById("input1-select");
+    var inputSelect2 = document.getElementById("input2-select");
 
+    // Clear the input select options
+    inputSelect1.innerHTML = "";
+    inputSelect2.innerHTML = "";
 
+    // Add an option for each available MIDI input
+    for (var input of inputs.values()) {
+      var option = document.createElement("option");
+      option.value = input.id;
+      option.text = input.name;
+      inputSelect1.add(option);
+//      inputSelect2.add(option); 
+	  
+    }
+	
+	//I don't understand why this won't work in one for loop but it doesn't
+    for (var input of inputs.values()) {
+      var option = document.createElement("option");
+      option.value = input.id;
+      option.text = input.name;
+      inputSelect2.add(option); 
+    }
+	
+	
+
+    // Set the selected options to the last used inputs
+    var lastInputs = JSON.parse(localStorage.getItem("lastMIDIInputs"));
+    if (lastInputs) inputSelect1.value = lastInputs;
+	    if (lastInputs) inputSelect2.value = lastInputs;
+  });
+
+}
 
 
 
