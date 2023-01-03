@@ -10,8 +10,7 @@ WebMidi.enable()
 
 async function setup() {
 	
-	
-	
+	chooseMIDIInput()
     // Create AudioContext
     const WAContext = window.AudioContext || window.webkitAudioContext;
     const context = new WAContext();
@@ -174,21 +173,20 @@ console.log("Device 1 created.")
     document.getElementById("patcher-title2").innerText = (patcher.desc.meta.filename || "Unnamed Patcher") + " (v" + patcher.desc.meta.rnboversion + ")";
 
 
+
 //load preset 2
     loadPresets(device2, patcher, 2);
 
 //make sliders
-
     makeSliders(device1, "rnbo1-parameter-sliders");
+
     makeSliders(device2, "rnbo2-parameter-sliders");
+
 
 
 //makeMIDIListener
     makeMIDIListener(device1, 0);
     makeMIDIListener(device2, 1);
-
-
-
 
 	
 
@@ -223,15 +221,14 @@ function loadRNBOScript(version) {
 
 
 
-function makeSliders(device, ID) {
+function makeSliders(thisDevice, ID) {
     let pdiv = document.getElementById(ID);
-
 
     // This will allow us to ignore parameter update events while dragging the slider.
     let isDraggingSlider = false;
     let uiElements = {};
 
-    device.parameters.forEach(param => {
+    thisDevice.parameters.forEach(param => {
         // Subpatchers also have params. If we want to expose top-level
         // params only, the best way to determine if a parameter is top level
         // or not is to exclude parameters with a '/' in them.
@@ -275,7 +272,6 @@ function makeSliders(device, ID) {
         // Make each slider control its parameter
         slider.addEventListener("pointerdown", () => {
             isDraggingSlider = true;
-			console.log("Dragging " )
         });
         slider.addEventListener("pointerup", () => {
             isDraggingSlider = false;
@@ -309,8 +305,9 @@ function makeSliders(device, ID) {
         pdiv.appendChild(sliderContainer);
     });
 
+
     // Listen to parameter changes from the device
-    device.parameterChangeEvent.subscribe(param => {
+    thisDevice.parameterChangeEvent.subscribe(param => {
         if (!isDraggingSlider)
             uiElements[param.name].slider.value = param.value;
         uiElements[param.name].text.value = param.value.toFixed(1);
@@ -515,9 +512,6 @@ function chooseMIDIInput() {
   });
 
 }
-
-
-
 
 
 
