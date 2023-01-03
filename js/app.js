@@ -101,7 +101,7 @@ async function setup() {
 //    attachOutports(device);
 
     // (Optional) Load presets, if any
-    loadPresets(device1, patcher);
+//    loadPresets(device1, patcher);
 
     // (Optional) Connect MIDI inputs
 
@@ -110,7 +110,6 @@ async function setup() {
 
     const patchExportURL2 = "export/patch3.export.json";
     patcher = null
-	console.log("Patcher: " + patcher)
     // Fetch the exported patcher
 //    let response, patcher;
 
