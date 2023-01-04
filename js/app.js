@@ -101,7 +101,7 @@ async function setup() {
 //    attachOutports(device);
 
     // (Optional) Load presets, if any
-    loadPresets(device1, patcher, 1);
+//    loadPresets(device1, patcher, 1);
 
     // (Optional) Connect MIDI inputs
 
@@ -175,7 +175,7 @@ console.log("Device 1 created.")
 
 
 //load preset 2
-    loadPresets(device2, patcher, 2);
+//    loadPresets(device2, patcher, 2);
 
 //make sliders
     makeSliders(device1, "rnbo1-parameter-sliders");
@@ -241,7 +241,10 @@ function makeSliders(thisDevice, ID) {
         let slider = document.createElement("input");
         let text = document.createElement("input");
         let sliderContainer = document.createElement("div");
+		let br = document.createElement("br");
+		
         sliderContainer.appendChild(label);
+     //   sliderContainer.appendChild(br);
         sliderContainer.appendChild(slider);
         sliderContainer.appendChild(text);
 
@@ -512,6 +515,19 @@ function chooseMIDIInput() {
   });
 
 }
+
+
+function controlToggle(element) {
+  var sliders = document.getElementById(element);
+  if (sliders.style.display === "none") {
+    sliders.style.display = "flex";
+  } else {
+    sliders.style.display = "none";
+  }
+}
+
+
+
 
 
 

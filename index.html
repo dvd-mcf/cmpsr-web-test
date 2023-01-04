@@ -12,7 +12,7 @@
 	
   </head>
  <body>
-
+<div id = "topSection">
 		 <div id="plate">
 				<img src="media/digit_logo.png" alt="Digit Logo">
 				<h1>Ingredients  </h1>
@@ -54,7 +54,7 @@
     <!-- Player 1  -->
 	
 		<div id = "player">
-			<h1> Player 1 </h1>
+			<h2> Player 1 </h2>
 					Input:
 			    <select onchange="changeInputs()" id="input1-select" ></select>
 			<div>
@@ -64,17 +64,21 @@
 			</div>
 		
 	
+	    <!-- Presets
 		
 		<div id="rnbo-presets1">
 			<select id="preset-select1"></select>
 		</div>
+			
+			-->
+			
 	</div>
 		
 		    <!-- Player 2  -->
 			
 		<div id = "player">
 
-			<h1> Player 2 </h1>
+			<h2> Player 2 </h2>
 			Input:
 		    <select onchange="changeInputs()" id="input2-select" "></select>
 			
@@ -84,30 +88,41 @@
 			</div>
 			 
 
+	    <!-- Presets
 
 		
 		<div id="rnbo-presets2">
 			<select id="preset-select2"></select>
 		</div>
+			
+			-->
 		
 		</div>
 		
 	</div>
+	<div id = "sliders">
+
+		<div id = "slider">
+	
+	        <div id="rnbo1-parameter-sliders">
+			</div>
+	    </div>
+	
+		<div id = "slider">
+	        <div id="rnbo2-parameter-sliders">
+			</div>
+	    </div>
+	</div>
 		
 
-
-
-<div id = "sliders">
-        <div id="rnbo1-parameter-sliders">
-            <h2>Player 1 </h2>
-        </div>
-        <div id="rnbo2-parameter-sliders">
-            <h2>Player 2 </h2>
-        </div>
-		
-    </div>
 </div>
 
+
+
+
+	</div>
+				
+</div>
 		<div id = "instructions">
 				<h3> Click here to play the backing track. </h3>
 				<br>
@@ -134,9 +149,6 @@
 				<img id = "arrows" src="media/player2.png" alt="player 2">
 			</div>
 		</div>
-	</div>
-				
-			</div>
 
 				
     <!-- Load the script that creates the RNBO device  -->

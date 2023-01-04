@@ -5,8 +5,13 @@ html, body {
 }
 
 img {
-  width: 40%;
+  width: 30%;
   
+}
+
+label {
+	
+	font-size: 12px;
 }
 
 h3 {
@@ -14,6 +19,10 @@ h3 {
 	color: black;
 }
 
+
+.param-slider {
+	width: 100px;
+}
 #arrows {
   width: 100%;
   max-width: 540px;
@@ -58,18 +67,23 @@ h2, em {
 
 	width: 90%;
 	float: center;
+	clear: left;
 	padding: 50px;
-	padding-top: 1200px;
     align-items: center;
 	
 	
 }
 
+#topSection {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
 #instructioncolumns {
 	display: flex;
 	flex-direction: row;
-	    
-	
+	   
 	
 }
 
@@ -114,11 +128,22 @@ h2, em {
 	width: 100%;
 	display: flex;
 	padding: 12px;
-	align-items: center;
+	align-items: top;
 	background-color: black;
 	color: white;
 	justify-content: space-around;
+	z-index: 2;
+	
+	
 }
+
+#slider {
+    display: flex;
+    flex-direction: column;
+	z-index: 2;
+	
+}
+
 #players {
 	width: 100%;
 	display: flex;
@@ -663,7 +688,8 @@ div[class*="rounded"] {
 }
 
 input[type=text] {
-    font-size: 15px
+    font-size: 15px;
+	width: 40px
 }
 
 .simple-input {
