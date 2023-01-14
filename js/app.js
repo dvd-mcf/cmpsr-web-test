@@ -382,7 +382,7 @@ function makeMIDIListener(device, port) {
     mySynth.channels[1].addListener("noteon", e => {
 	  
       let midiChannel = 0;
-
+	  
       // Format a MIDI message paylaod, this constructs a MIDI on event
       let noteOnMessage = [
           144 + midiChannel, // Code for a note on: 10010000 & midi channel (0-15)
@@ -396,7 +396,13 @@ function makeMIDIListener(device, port) {
           e.note.number, // MIDI Note
           0 // MIDI Velocity
       ];
-  
+  		
+		console.log(e.note.number)
+	  let pitchclass = e.note.number % 12
+	  		console.log(pitchclass)
+	  if (pitchclass === 0) {
+	  	arrow1.flashGreen()
+	  }
       // Including rnbo.min.js (or the unminified rnbo.js) will add the RNBO object
       // to the global namespace. This includes the TimeNow constant as well as
       // the MIDIEvent constructor.
@@ -505,6 +511,9 @@ function chooseMIDIInput() {
       option.text = input.name;
       inputSelect2.add(option); 
     }
+	
+	inputSelect2.selectedIndex = 1
+	
 	
 	
 
