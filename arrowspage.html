@@ -1,0 +1,46 @@
+<head>
+
+	<script type="text/javascript" src="https://cdn.cycling74.com/rnbo/latest/rnbo.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Atkinson+Hyperlegible">
+	<link rel="stylesheet" href="style.css">
+</head>
+	
+<div id = "onboarder">
+			<strong><!-- Player 1  --></strong>
+			<div id="player">
+				<h2>
+				</h2><strong>Input: <select onchange="changeInputs()" id="input1-select">
+				</select></strong>
+				<div>
+					<strong>Patch loaded:</strong>
+					<h3 id="patcher-title1">
+						<strong>No patcher loaded for Player 1</strong>
+					</h3>
+				</div><!-- Presets
+		
+		<div id="rnbo-presets1">
+			<select id="preset-select1"></select>
+		</div>
+			
+			-->
+			</div>
+		<canvas id="arrow"></canvas>
+		<h1 id="pitch"></h1>
+		<h1 id="instructions">
+			<strong>Welcome! Plug in your CMPSR and move your joystick forward to hear a C note.</strong>
+		</h1>
+	</div>
+<!-- Load the script that creates the RNBO device  -->
+<!-- Uncomment if you know the version of your exported RNBO patch to avoid dynamic loading -->
+<!-- <script type="text/javascript" src="https://cdn.cycling74.com/rnbo/latest/rnbo.min.js"></script> -->
+<!-- (Optional) The guardrails.js script isn't required for RNBO to work, and you can skip including it -->
+<!-- It simply offers some helpful error messages for common problems -->
+<p>
+	<strong>
+	<script type="text/javascript" src="js/guardrails.js"></script> <!-- Import RNBO Engine Wrapper -->
+	 <!-- Make sure to include the RNBO engine version to the version of your exported code, found in rnbopackage.json -->
+	 
+	<script src="https://cdn.jsdelivr.net/npm/webmidi@latest/dist/iife/webmidi.iife.js"></script> 
+	<script type="text/javascript" src="js/app.js"></script></strong>
+</p>
