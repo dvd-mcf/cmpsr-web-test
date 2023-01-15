@@ -403,141 +403,8 @@ function makeMIDIListener(device, port) {
 
 	const mySynth = WebMidi.inputs[port];
 	console.log("Synth: " + mySynth)
-<<<<<<< Updated upstream
-    // const mySynth = WebMidi.getInputByName("TYPE NAME HERE!")
-  
-    mySynth.channels[1].addListener("noteon", e => {
-	  
-      let midiChannel = 0;
-
-      // Format a MIDI message paylaod, this constructs a MIDI on event
-      let noteOnMessage = [
-          144 + midiChannel, // Code for a note on: 10010000 & midi channel (0-15)
-          e.note.number, // MIDI Note
-          100 // MIDI Velocity
-		  
-      ];
-  
-      let noteOffMessage = [
-          128 + midiChannel, // Code for a note off: 10000000 & midi channel (0-15)
-          e.note.number, // MIDI Note
-          0 // MIDI Velocity
-      ];
-  
-      // Including rnbo.min.js (or the unminified rnbo.js) will add the RNBO object
-      // to the global namespace. This includes the TimeNow constant as well as
-      // the MIDIEvent constructor.
-      let midiPort = 0;
-      let noteDurationMs = 250;
-  
-      // When scheduling an event to occur in the future, use the current audio context time
-      // multiplied by 1000 (converting seconds to milliseconds) for now.
-      let noteOnEvent = new RNBO.MIDIEvent(device.context.currentTime * 1000, midiPort, noteOnMessage);
-      let noteOffEvent = new RNBO.MIDIEvent(device.context.currentTime * 1000 + noteDurationMs, midiPort, noteOffMessage);
-  
-      device.scheduleEvent(noteOnEvent);
-      device.scheduleEvent(noteOffEvent);
-	  
-	  
-	  
-  });
-	
-  function playNote(note) {
-  	console.log(note)
-	
-  	console.log("THE DEVICE: " + theDevice)
-      let mdiv = document.getElementById("rnbo-clickable-keyboard");
-      if (device.numMIDIInputPorts === 0) return;
-
-      mdiv.removeChild(document.getElementById("no-midi-label"));
-
-      const midiNotes = [49, 52, 56, 63];
-      midiNotes.forEach(note => {
-          const key = document.createElement("div");
-          const label = document.createElement("p");
-          label.textContent = note;
-          key.appendChild(label);
-          key.addEventListener("pointerdown", () => {
-              let midiChannel = 0;
-
-              // Format a MIDI message paylaod, this constructs a MIDI on event
-              let noteOnMessage = [
-                  144 + midiChannel, // Code for a note on: 10010000 & midi channel (0-15)
-                  note, // MIDI Note
-                  100 // MIDI Velocity
-              ];
-        
-              let noteOffMessage = [
-                  128 + midiChannel, // Code for a note off: 10000000 & midi channel (0-15)
-                  note, // MIDI Note
-                  0 // MIDI Velocity
-              ];
-        
-              // Including rnbo.min.js (or the unminified rnbo.js) will add the RNBO object
-              // to the global namespace. This includes the TimeNow constant as well as
-              // the MIDIEvent constructor.
-              let midiPort = 0;
-              let noteDurationMs = 250;
-        
-              // When scheduling an event to occur in the future, use the current audio context time
-              // multiplied by 1000 (converting seconds to milliseconds) for now.
-              let noteOnEvent = new RNBO.MIDIEvent(device.context.currentTime * 1000, midiPort, noteOnMessage);
-              let noteOffEvent = new RNBO.MIDIEvent(device.context.currentTime * 1000 + noteDurationMs, midiPort, noteOffMessage);
-        
-              device.scheduleEvent(noteOnEvent);
-              device.scheduleEvent(noteOffEvent);
-
-              key.classList.add("clicked");
-          });
-
-          key.addEventListener("pointerup", () => key.classList.remove("clicked"));
-
-          mdiv.appendChild(key);
-      });
-  }	
-	
-	
-	
-	
-}
 
 
-function chooseMIDIInput() {
-  navigator.requestMIDIAccess().then(function(midiAccess) {
-    console.log("Input requested")
-    var inputs = midiAccess.inputs;
-        console.log(inputs)
-
-    var inputSelect1 = document.getElementById("input1-select");
-    var inputSelect2 = document.getElementById("input2-select");
-
-    // Clear the input select options
-    inputSelect1.innerHTML = "";
-    inputSelect2.innerHTML = "";
-
-    // Add an option for each available MIDI input
-    for (var input of inputs.values()) {
-      var option = document.createElement("option");
-      option.value = input.id;
-      option.text = input.name;
-      inputSelect1.add(option);
-//      inputSelect2.add(option); 
-	  
-    }
-	
-	//I don't understand why this won't work in one for loop but it doesn't
-    for (var input of inputs.values()) {
-      var option = document.createElement("option");
-      option.value = input.id;
-      option.text = input.name;
-      inputSelect2.add(option); 
-    }
-	
-	
-=======
-
-
->>>>>>> Stashed changes
 
 	let midiPort = 0;
 	let noteDurationMs = 250;
@@ -744,7 +611,7 @@ function chooseMIDIInput() {
 		// Create an arrow object
 		for (let i = 0; i < 8; i++) {
 			arrow = {
-			x: canvas.width / 2, // center the x-coordinate
+x: canvas.width / 2, // center the x-coordinate
             y: canvas.height / 2, // center the y-coordinate
 				angle: i * 45,
 				color: "black",
