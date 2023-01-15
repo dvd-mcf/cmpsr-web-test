@@ -464,7 +464,7 @@ function makeMIDIListener(device, port) {
 
 			case 7:
 				if (currentNote === 5) {
-					instructionsFader("You're on a roll! Now play an A by pressing down and left.", pitchClass);
+					instructionsFader("Brilliant! Now play an A by pressing down and left.", pitchClass);
 
 				}
 				break;
