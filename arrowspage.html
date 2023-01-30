@@ -7,14 +7,18 @@
 </head>
 	
 <div id = "onboarder">
-			<strong><!-- Player 1  --></strong>
+	<div id = "statusHeader">
+			<h4> Audio status: </h4> 
+			<div id = "audioStatus"> 🔴 </div>
+		</div>
+			<br>
+			
 			<div id="player">
-				<h2>
-				</h2><strong>Input: <select onchange="changeInputs()" id="input1-select">
+<strong>Input: <select onchange="changeInputs()" id="input0-select">
 				</select></strong>
 				<div>
 					<strong>Patch loaded:</strong>
-					<h3 id="patcher-title1">
+					<h3 id="patcher-title0">
 						<strong>No patcher loaded for Player 1</strong>
 					</h3>
 				</div><!-- Presets

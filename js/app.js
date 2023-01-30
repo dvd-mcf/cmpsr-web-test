@@ -2,14 +2,12 @@ var theDevice
 var port1
 var port2
 
-var device1
-var device2;
+var devices = []
 
-let currentNote = null;
+var currentNote = null;
 
 
 WebMidi.enable()
-
 
 
 async function setup() {
@@ -20,204 +18,21 @@ async function setup() {
 	const WAContext = window.AudioContext || window.webkitAudioContext;
 	const context = new WAContext();
 
+	context.onstatechange = function() {
+	  if (context.state === "running" && document.getElementById("audioStatus")) {
+		  document.getElementById("audioStatus").innerHTML = "🟢";
+	  }
+	};
+
 	// Create gain node and connect it to audio output
 	const outputNode = context.createGain();
 	outputNode.connect(context.destination);
 
-	// DEVICE 1
-
-	const patchExportURL1 = "export/patch1.export.json";
-
-	// Fetch the exported patcher
-	let response, patcher;
-
-
-	try {
-		response = await fetch(patchExportURL1);
-		patcher = await response.json();
-
-		if (!window.RNBO) {
-			// Load RNBO script dynamically
-			// Note that you can skip this by knowing the RNBO version of your patch
-			// beforehand and just include it using a <script> tag
-			await loadRNBOScript(patcher.desc.meta.rnboversion);
-		}
-	} catch (err) {
-		const errorContext = {
-			error: err
-		};
-		if (response && (response.status >= 300 || response.status < 200)) {
-			errorContext.header = `Couldn't load patcher export bundle`,
-				errorContext.description = `Check app.js to see what file it's trying to load. Currently it's` +
-				` trying to load "${patchExportURL}". If that doesn't` +
-				` match the name of the file you exported from RNBO, modify` +
-				` patchExportURL in app.js.`;
-		}
-		if (typeof guardrails === "function") {
-			guardrails(errorContext);
-		} else {
-			throw err;
-		}
-		return;
-	}
-
-	// (Optional) Fetch the dependencies
-	let dependencies = [];
-	try {
-		const dependenciesResponse = await fetch("export/dependencies.json");
-		dependencies = await dependenciesResponse.json();
-
-		// Prepend "export" to any file dependenciies
-		dependencies = dependencies.map(d => d.file ? Object.assign({}, d, {
-			file: "export/" + d.file
-		}) : d);
-	} catch (e) {}
-	// Create the device
-
-
-	try {
-
-		// Changing the name of the variable 'patcher' breaks the createDevice function		
-		device1 = await RNBO.createDevice({
-			context,
-			patcher
-		});
-		console.log(patcher)
-	} catch (err) {
-		if (typeof guardrails === "function") {
-			guardrails({
-				error: err
-			});
-		} else {
-			throw err;
-		}
-		return;
-	}
-
-
-	// (Optional) Load the samples
-	if (dependencies.length)
-		await device1.loadDataBufferDependencies(dependencies);
-
-	// Connect the device1 to the web audio graph
-	device1.node.connect(outputNode);
-	// (Optional) Extract the name and rnbo version of the patcher from the description
-	document.getElementById("patcher-title1").innerText = (patcher.desc.meta.filename || "Unnamed Patcher") + " (v" + patcher.desc.meta.rnboversion + ")";
-
-	// (Optional) Automatically create sliders for the device parameters
-
-	// (Optional) Create a form to send messages to RNBO inputs
-	//    makeInportForm(device);
-
-	// (Optional) Attach listeners to outports so you can log messages from the RNBO patcher
-	//    attachOutports(device);
-
-	// (Optional) Load presets, if any
-	//    loadPresets(device1, patcher, 1);
-
-	// (Optional) Connect MIDI inputs
-
-	console.log("Device 1 created.")
-	// DEVICE 2
-
-	const patchExportURL2 = "export/patch4.export.json";
-	patcher = null
-	// Fetch the exported patcher
-	//    let response, patcher;
-
-
-	try {
-		response2 = await fetch(patchExportURL2);
-		patcher = await response2.json();
-
-		if (!window.RNBO) {
-			// Load RNBO script dynamically
-			// Note that you can skip this by knowing the RNBO version of your patch
-			// beforehand and just include it using a <script> tag
-			await loadRNBOScript(patcher.desc.meta.rnboversion);
-		}
-	} catch (err) {
-		const errorContext = {
-			error: err
-		};
-		if (response && (response.status >= 300 || response.status < 200)) {
-			errorContext.header = `Couldn't load patcher export bundle`,
-				errorContext.description = `Check app.js to see what file it's trying to load. Currently it's` +
-				` trying to load "${patchExportURL}". If that doesn't` +
-				` match the name of the file you exported from RNBO, modify` +
-				` patchExportURL in app.js.`;
-		}
-		if (typeof guardrails === "function") {
-			guardrails(errorContext);
-		} else {
-			throw err;
-		}
-		return;
-	}
-
-	// (Optional) Fetch the dependencies
-
-	// Create the device
-
-
-	try {
-
-		device2 = await RNBO.createDevice({
-			context,
-			patcher
-		});
-
-	} catch (err) {
-		if (typeof guardrails === "function") {
-			guardrails({
-				error: err
-			});
-		} else {
-			throw err;
-		}
-		return;
-	}
-
-
-	// (Optional) Load the samples
-	if (dependencies.length)
-		await device2.loadDataBufferDependencies(dependencies);
-
-	// Connect the device1 to the web audio graph
-	console.log("Connecting device 2...")
-	device2.node.connect(outputNode);
-	// (Optional) Extract the name and rnbo version of the patcher from the description
-	if (document.getElementById("patcher-title2")){
-	document.getElementById("patcher-title2").innerText = (patcher.desc.meta.filename || "Unnamed Patcher") + " (v" + patcher.desc.meta.rnboversion + ")";
-}
-
-
-	//load preset 2
-	//    loadPresets(device2, patcher, 2);
-
-	//make sliders
-	var element = document.getElementById("rnbo2-parameter-slider")
-	if (typeof(element) != 'undefined' && element != null) {
+	createDevice ("export/patch1.export.json", 0, context, outputNode)
 	
-	makeSliders(device1, "rnbo1-parameter-sliders");
-}
-	makeMIDIListener(device1, 0);
-	
-
-	var element = document.getElementById("rnbo2-parameter-slider")
-	if (typeof(element) != 'undefined' && element != null) {
-		makeSliders(device2, "rnbo2-parameter-sliders")
-		makeMIDIListener(device2, 1);
-		
+    if (document.getElementById(`patcher-title1`)) {
+	createDevice ("export/patch4.export.json", 1, context, outputNode)
 	}
-
-
-
-	//makeMIDIListener
-	
-
-
-
 	document.body.onclick = () => {
 		context.resume();
 	}
@@ -225,9 +40,90 @@ async function setup() {
 	// Skip if you're not using guardrails.js
 	if (typeof guardrails === "function")
 		guardrails();
-
+	
 
 }
+
+async function createDevice(patchExportURL, deviceNumber, context, outputNode) {
+  let response, patcher;
+
+  try {
+    response = await fetch(patchExportURL);
+    patcher = await response.json();
+
+    if (!window.RNBO) {
+      await loadRNBOScript(patcher.desc.meta.rnboversion);
+    }
+  } catch (err) {
+    const errorContext = { error: err };
+    if (response && (response.status >= 300 || response.status < 200)) {
+      errorContext.header = `Couldn't load patcher export bundle`;
+      errorContext.description = `Check app.js to see what file it's trying to load. Currently it's` +
+        ` trying to load "${patchExportURL}". If that doesn't` +
+        ` match the name of the file you exported from RNBO, modify` +
+        ` patchExportURL in app.js.`;
+    }
+    if (typeof guardrails === "function") {
+      guardrails(errorContext);
+    } else {
+      throw err;
+    }
+    return;
+  }
+
+  let dependencies = [];
+  try {
+    const dependenciesResponse = await fetch("export/dependencies.json");
+    dependencies = await dependenciesResponse.json();
+    dependencies = dependencies.map(d => d.file ? Object.assign({}, d, {
+      file: "export/" + d.file
+    }) : d);
+  } catch (e) {}
+
+  try {
+      devices[deviceNumber] = await RNBO.createDevice({
+      context,
+      patcher
+    });
+    console.log(patcher);
+  } catch (err) {
+    if (typeof guardrails === "function") {
+      guardrails({
+        error: err
+      });
+    } else {
+      throw err;
+    }
+    return;
+  }
+
+  if (dependencies.length) {
+      await devices[deviceNumber].loadDataBufferDependencies(dependencies);
+  }
+
+  devices[deviceNumber].node.connect(outputNode);
+  if (document.getElementById(`patcher-title${deviceNumber}`)) {
+  document.getElementById(`patcher-title${deviceNumber}`).innerText = (patcher.desc.meta.filename || "Unnamed Patcher") + " (v" + patcher.desc.meta.rnboversion + ")";
+}
+
+
+	//make sliders
+	console.log(`rnbo${deviceNumber}-parameter-sliders`)
+
+if (document.getElementById(`rnbo${deviceNumber}-parameter-sliders`)) {
+	makeSliders(devices[deviceNumber], `rnbo${deviceNumber}-parameter-sliders`);
+} else {
+}
+
+
+makeMIDIListener(devices[deviceNumber], deviceNumber);
+
+
+  console.log(`Device ${deviceNumber} created.`);
+}
+
+
+
 
 function loadRNBOScript(version) {
 	return new Promise((resolve, reject) => {
@@ -343,6 +239,7 @@ function makeSliders(thisDevice, ID) {
 	// Listen to parameter changes from the device
 	thisDevice.parameterChangeEvent.subscribe(param => {
 		if (!isDraggingSlider)
+			console.log("Dragging")
 			uiElements[param.name].slider.value = param.value;
 		uiElements[param.name].text.value = param.value.toFixed(1);
 	});
@@ -371,27 +268,32 @@ function loadPresets(device, patcher, ID) {
 }
 
 function changeInputs() {
-	var select1 = document.getElementById("input1-select");
-	var value1 = select1.selectedIndex
+	var select0 = document.getElementById("input0-select");
+	var value0 = select0.selectedIndex
 
-	console.log(value1);
-
-	var select2 = document.getElementById("input2-select");
-	var value2 = select2.selectedIndex
-
-	console.log(value2);
 
 	for (var i = 0; i < WebMidi.inputs.length; i++) {
 		const mySynth = WebMidi.inputs[i];
 		mySynth.channels[1].removeListener("noteon")
 
 	}
+	
+
+	if (document.getElementById("input1-select")) {
+	var select1 = document.getElementById("input1-select");
+	var value1 = select1.selectedIndex
+	makeMIDIListener(devices[1], value1);
+}
 
 
-	makeMIDIListener(device1, value1);
-	makeMIDIListener(device2, value2);
+
+
+	console.log("Logger:")
+	makeMIDIListener(devices[0], value0);
 
 }
+
+
 
 
 
@@ -428,6 +330,7 @@ function makeMIDIListener(device, port) {
 
 		// Format a MIDI message paylaod, this constructs a MIDI on event
 
+		if (document.getElementById("arrow")) {
 
 		if (pitchClass >= 0 && pitchClass <= 12) {
 			let arrowIndex = pitchClassMap[pitchClass];
@@ -487,7 +390,7 @@ function makeMIDIListener(device, port) {
 				}
 				break;
 		}
-
+	}
 
 		// Including rnbo.min.js (or the unminified rnbo.js) will add the RNBO object
 		// to the global namespace. This includes the TimeNow constant as well as
@@ -513,6 +416,8 @@ function makeMIDIListener(device, port) {
 			e.data[2] // MIDI Velocity
 		];
 
+		if (document.getElementById("arrow")) {
+
 		let pitchClass = e.note.number % 24
 		let pitchClassMap = [6, null, 5, null, 7, 4, null, 0, null, 3, 2, 1, 2];
 
@@ -528,7 +433,7 @@ function makeMIDIListener(device, port) {
 		// Including rnbo.min.js (or the unminified rnbo.js) will add the RNBO object
 		// to the global namespace. This includes the TimeNow constant as well as
 		// the MIDIEvent constructor.
-
+	}
 
 		let noteOffEvent = new RNBO.MIDIEvent(device.context.currentTime * 1000, midiPort, noteOffMessage);
 		device.scheduleEvent(noteOffEvent);
@@ -545,30 +450,31 @@ function instructionsFader(instructionsText, pitchClass) {
 
 }
 
+
 function chooseMIDIInput() {
 	navigator.requestMIDIAccess().then(function(midiAccess) {
 			console.log("Input requested")
 			var inputs = midiAccess.inputs;
 			console.log(inputs)
 
-			if (document.getElementById("input1-select")) {
-				var inputSelect1 = document.getElementById("input1-select");
-				inputSelect1.innerHTML = "";
+			if (document.getElementById("input0-select")) {
+				var inputSelect0 = document.getElementById("input0-select");
+				inputSelect0.innerHTML = "";
 
 				for (var input of inputs.values()) {
 					var option = document.createElement("option");
 					option.value = input.id;
 					option.text = input.name;
-					inputSelect1.add(option);
+					inputSelect0.add(option);
 					//      inputSelect2.add(option); 
 
 				}
 			}
-			var element = document.getElementById("input2-select")
+			var element = document.getElementById("input1-select")
 			if (typeof(element) != 'undefined' && element != null) {
 
-				var inputSelect2 = document.getElementById("input2-select");
-				inputSelect2.innerHTML = "";
+				var inputSelect1 = document.getElementById("input1-select");
+				inputSelect1.innerHTML = "";
 
 				// Clear the input select options
 
@@ -580,10 +486,10 @@ function chooseMIDIInput() {
 					var option = document.createElement("option");
 					option.value = input.id;
 					option.text = input.name;
-					inputSelect2.add(option);
+					inputSelect1.add(option);
 				}
 
-				inputSelect2.selectedIndex = 1
+				inputSelect1.selectedIndex = 1
 			}
 
 
@@ -602,7 +508,7 @@ function chooseMIDIInput() {
 		}
 	}
 
-	let arrowArray = [];
+	var arrowArray = [];
 
 	function arrowFlash() {
 		var canvas = document.getElementById("arrow");

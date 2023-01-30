@@ -660,7 +660,7 @@
       "architecture": "x64",
       "filename": "DailyDrillBass.maxpat",
       "maxversion": "8.5.0",
-      "rnboversion": "1.0.0"
+      "rnboversion": "1.0.2"
     }
   },
   "presets": [
